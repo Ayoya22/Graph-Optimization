@@ -4,8 +4,10 @@ import networkx as nx
 import pandas as pd
 import matplotlib.pyplot as plt
 
-nodelist = pd.read_csv('https://gist.githubusercontent.com/brooksandrew/f989e10af17fb4c85b11409fea47895b/raw/a3a8da0fa5b094f1ca9d82e1642b384889ae16e8/nodelist_sleeping_giant.csv')
-edgelist = pd.read_csv('https://gist.githubusercontent.com/brooksandrew/e570c38bcc72a8d102422f2af836513b/raw/89c76b2563dbc0e88384719a35cba0dfc04cd522/edgelist_sleeping_giant.csv')
+nodelist = pd.read_csv(
+    'https://gist.githubusercontent.com/brooksandrew/f989e10af17fb4c85b11409fea47895b/raw/a3a8da0fa5b094f1ca9d82e1642b384889ae16e8/nodelist_sleeping_giant.csv')
+edgelist = pd.read_csv(
+    'https://gist.githubusercontent.com/brooksandrew/e570c38bcc72a8d102422f2af836513b/raw/89c76b2563dbc0e88384719a35cba0dfc04cd522/edgelist_sleeping_giant.csv')
 edgelist.head(10)
 nodelist.head(5)
 
@@ -24,7 +26,7 @@ print(elrow[2:].to_dict())  # edge attribute dict
 
 # Adding node attributes
 for i, nlrow in nodelist.iterrows():
-    nx.set_node_attributes(g, {nlrow['id']:  nlrow[1:].to_dict()})
+    nx.set_node_attributes(g, {nlrow['id']: nlrow[1:].to_dict()})
 
 # Node list example
 print(nlrow)
@@ -63,3 +65,28 @@ nodes_odd_degree[0:5]
 
 print('Number of nodes of odd degree: {}'.format(len(nodes_odd_degree)))
 print('Number of total nodes: {}'.format(len(g.nodes())))
+
+# Compute all pairs of odd nodes. in a list of tuples
+odd_node_pairs = list(itertools.combinations(nodes_odd_degree, 2))
+
+# Preview pairs of odd degree nodes
+odd_node_pairs[0:10]
+
+# Counts
+print('Number of pairs: {}'.format(len(odd_node_pairs)))
+
+
+def get_shortest_paths_distances(graph, pairs, edge_weight_name):
+    """Compute shortest distance between each pair of nodes in a graph.  Return a dictionary keyed on node pairs (
+    tuples). """
+    distances = {}
+    for pair in pairs:
+        distances[pair] = nx.dijkstra_path_length(graph, pair[0], pair[1], weight=edge_weight_name)
+    return distances
+
+
+# Compute shortest paths.  Return a dictionary with node pairs keys and a single value equal to shortest path distance.
+odd_node_pairs_shortest_paths = get_shortest_paths_distances(g, odd_node_pairs, 'distance')
+
+# Preview with a bit of hack (there is no head/slice method for dictionaries).
+dict(list(odd_node_pairs_shortest_paths.items())[0:10])
