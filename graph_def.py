@@ -163,3 +163,34 @@ nx.draw(g_odd_complete_min_edges, pos=node_positions, node_size=20, alpha=1, nod
 
 plt.title('Min Weight Matching on Orginal Graph')
 plt.show()
+
+
+def add_augmenting_path_to_graph(graph, min_weight_pairs):
+    """
+    Add the min weight matching edges to the original graph
+    Parameters:
+        graph: NetworkX graph (original graph from trailmap)
+        min_weight_pairs: list[tuples] of node pairs from min weight matching
+    Returns:
+        augmented NetworkX graph
+    """
+
+    # We need to make the augmented graph a MultiGraph so we can add parallel edges
+    graph_aug = nx.MultiGraph(graph.copy())
+    for pair in min_weight_pairs:
+        graph_aug.add_edge(pair[0],
+                           pair[1],
+                           **{'distance': nx.dijkstra_path_length(graph, pair[0], pair[1]), 'trail': 'augmented'}
+                           )
+    return graph_aug
+
+
+# Create augmented graph: add the min weight matching edges to g
+g_aug = add_augmenting_path_to_graph(g, odd_matching)
+
+# Counts
+print('Number of edges in original graph: {}'.format(len(g.edges())))
+print('Number of edges in augmented graph: {}'.format(len(g_aug.edges())))
+
+# pd.value_counts(g_aug.degree())  # deprecated after NX 1.11
+pd.value_counts([e[1] for e in g_aug.degree()])
