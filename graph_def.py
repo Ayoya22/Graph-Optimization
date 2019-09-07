@@ -228,3 +228,50 @@ def create_eulerian_circuit(graph_augmented, graph_original, starting_node=None)
                 euler_circuit.append((edge_aug[0], edge_aug[1], edge_aug_att))
 
     return euler_circuit
+
+
+# Create the Eulerian circuit
+euler_circuit = create_eulerian_circuit(g_aug, g, 'b_end_east')
+print('Length of Eulerian circuit: {}'.format(len(euler_circuit)))
+
+
+def create_cpp_edgelist(euler_circuit):
+    """
+    Create the edgelist without parallel edge for the visualization
+    Combine duplicate edges and keep track of their sequence and # of walks
+    Parameters:
+        euler_circuit: list[tuple] from create_eulerian_circuit
+    """
+    cpp_edgelist = {}
+
+    for i, e in enumerate(euler_circuit):
+        edge = frozenset([e[0], e[1]])
+
+        if edge in cpp_edgelist:
+            cpp_edgelist[edge][2]['sequence'] += ', ' + str(i)
+            cpp_edgelist[edge][2]['visits'] += 1
+
+        else:
+            cpp_edgelist[edge] = e
+            cpp_edgelist[edge][2]['sequence'] = str(i)
+            cpp_edgelist[edge][2]['visits'] = 1
+
+    return list(cpp_edgelist.values())
+
+
+cpp_edgelist = create_cpp_edgelist(euler_circuit)
+print('Number of edges in CPP edge list: {}'.format(len(cpp_edgelist)))
+
+# Create CPP solution graph
+g_cpp = nx.Graph(cpp_edgelist)
+
+plt.figure(figsize=(14, 10))
+
+visit_colors = {1:'lightgray', 2:'blue'}
+edge_colors = [visit_colors[e[2]['visits']] for e in g_cpp.edges(data=True)]
+node_colors = ['red'  if node in nodes_odd_degree else 'lightgray' for node in g_cpp.nodes()]
+
+nx.draw_networkx(g_cpp, pos=node_positions, node_size=20, node_color=node_colors, edge_color=edge_colors, with_labels=False)
+plt.axis('off')
+plt.show()
+
