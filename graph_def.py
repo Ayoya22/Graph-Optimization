@@ -90,3 +90,76 @@ odd_node_pairs_shortest_paths = get_shortest_paths_distances(g, odd_node_pairs, 
 
 # Preview with a bit of hack (there is no head/slice method for dictionaries).
 dict(list(odd_node_pairs_shortest_paths.items())[0:10])
+
+
+def create_complete_graph(pair_weights, flip_weights=True):
+    """
+    Create a completely connected graph using a list of vertex pairs and the shortest path distances between them
+    Parameters:
+        pair_weights: list[tuple] from the output of get_shortest_paths_distances
+        flip_weights: Boolean. Should we negate the edge attribute in pair_weights?
+    """
+    g = nx.Graph()
+    for k, v in pair_weights.items():
+        wt_i = - v if flip_weights else v
+        # g.add_edge(k[0], k[1], {'distance': v, 'weight': wt_i})  # deprecated after NX 1.11
+        g.add_edge(k[0], k[1], **{'distance': v, 'weight': wt_i})
+    return g
+
+
+# Generate the complete graph
+g_odd_complete = create_complete_graph(odd_node_pairs_shortest_paths, flip_weights=True)
+
+# Counts
+print('Number of nodes: {}'.format(len(g_odd_complete.nodes())))
+print('Number of edges: {}'.format(len(g_odd_complete.edges())))
+
+# Plot the complete graph of odd-degree nodes
+plt.figure(figsize=(8, 6))
+pos_random = nx.random_layout(g_odd_complete)
+nx.draw_networkx_nodes(g_odd_complete, node_positions, node_size=20, node_color="red")
+nx.draw_networkx_edges(g_odd_complete, node_positions, alpha=0.1)
+plt.axis('off')
+plt.title('Complete Graph of Odd-degree Nodes')
+plt.show()
+
+# Compute min weight matching.
+# Note: max_weight_matching uses the 'weight' attribute by default as the attribute to maximize.
+odd_matching_dupes = nx.algorithms.max_weight_matching(g_odd_complete, True)
+
+print('Number of edges in matching: {}'.format(len(odd_matching_dupes)))
+
+# Preview of matching with dupes
+odd_matching_dupes
+
+# Convert matching to list of deduped tuples
+odd_matching = list(pd.unique([tuple(sorted([k, v])) for k, v in odd_matching_dupes.items()]))
+
+# Counts
+print('Number of edges in matching (deduped): {}'.format(len(odd_matching)))
+
+# Preview of deduped matching
+odd_matching
+
+plt.figure(figsize=(8, 6))
+
+# Plot the complete graph of odd-degree nodes
+nx.draw(g_odd_complete, pos=node_positions, node_size=20, alpha=0.05)
+
+# Create a new graph to overlay on g_odd_complete with just the edges from the min weight matching
+g_odd_complete_min_edges = nx.Graph(odd_matching)
+nx.draw(g_odd_complete_min_edges, pos=node_positions, node_size=20, edge_color='blue', node_color='red')
+
+plt.title('Min Weight Matching on Complete Graph')
+plt.show()
+
+plt.figure(figsize=(8, 6))
+
+# Plot the original trail map graph
+nx.draw(g, pos=node_positions, node_size=20, alpha=0.1, node_color='black')
+
+# Plot graph to overlay with just the edges from the min weight matching
+nx.draw(g_odd_complete_min_edges, pos=node_positions, node_size=20, alpha=1, node_color='red', edge_color='blue')
+
+plt.title('Min Weight Matching on Orginal Graph')
+plt.show()
