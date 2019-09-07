@@ -313,6 +313,6 @@ for i, e in enumerate(euler_circuit, start=1):
     nx.draw_networkx_edges(g_i, pos=node_positions, edge_color=g_i_edge_colors, alpha=0.8)
 
     plt.axis('off')
-    plt.savefig('fig/png/img{}.png'.format(i), dpi=120, bbox_inches='tight')
+    plt.savefig('images/img{}.png'.format(i), dpi=120, bbox_inches='tight')
     plt.close()
 
