@@ -55,4 +55,11 @@ nx.draw(g, pos=node_positions, edge_color=edge_colors, node_size=10, node_color=
 plt.title('Graph Representation of a simple program', size=15)
 plt.show()
 
+# Calculate list of nodes with odd degree (death ends)
+nodes_odd_degree = [v for v, d in g.degree() if d % 2 == 1]
 
+# Preview
+nodes_odd_degree[0:5]
+
+print('Number of nodes of odd degree: {}'.format(len(nodes_odd_degree)))
+print('Number of total nodes: {}'.format(len(g.nodes())))
