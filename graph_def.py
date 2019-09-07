@@ -275,3 +275,15 @@ nx.draw_networkx(g_cpp, pos=node_positions, node_size=20, node_color=node_colors
 plt.axis('off')
 plt.show()
 
+plt.figure(figsize=(14, 10))
+
+edge_colors = [e[2]['color'] for e in g_cpp.edges(data=True)]
+nx.draw_networkx(g_cpp, pos=node_positions, node_size=10, node_color='black', edge_color=edge_colors, with_labels=False, alpha=0.5)
+
+bbox = {'ec': [1, 1, 1, 0], 'fc': [1, 1, 1, 0]}  # hack to label edges over line (rather than breaking up line)
+edge_labels = nx.get_edge_attributes(g_cpp, 'sequence')
+nx.draw_networkx_edge_labels(g_cpp, pos=node_positions, edge_labels=edge_labels, bbox=bbox, font_size=6)
+
+plt.axis('off')
+plt.show()
+
