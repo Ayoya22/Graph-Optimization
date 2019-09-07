@@ -133,7 +133,7 @@ print('Number of edges in matching: {}'.format(len(odd_matching_dupes)))
 odd_matching_dupes
 
 # Convert matching to list of deduped tuples
-odd_matching = list(pd.unique([tuple(sorted([k, v])) for k, v in odd_matching_dupes.items()]))
+odd_matching = list(pd.unique([tuple(sorted([k, v])) for k, v in odd_matching_dupes]))
 
 # Counts
 print('Number of edges in matching (deduped): {}'.format(len(odd_matching)))
