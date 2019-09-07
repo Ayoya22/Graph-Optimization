@@ -22,3 +22,19 @@ print(elrow[0])  # node1
 print(elrow[1])  # node2
 print(elrow[2:].to_dict())  # edge attribute dict
 
+# Adding node attributes
+for i, nlrow in nodelist.iterrows():
+    g.node[nlrow['id']]=nlrow[1:].to_dict()
+
+# Node list example
+print(nlrow)
+
+# Preview first 5 edges
+g.edges(data=True)[0:5]
+# Preview first 5 nodes
+g.nodes(data=True)[0:5]
+
+# Print out some summary statistics before visualizing the graph.
+print('# of edges: {}'.format(g.number_of_edges()))
+print('# of nodes: {}'.format(g.number_of_nodes()))
+
