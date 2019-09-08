@@ -4,10 +4,13 @@ import networkx as nx
 import pandas as pd
 import matplotlib.pyplot as plt
 
-nodelist = pd.read_csv(
-    'https://gist.githubusercontent.com/brooksandrew/f989e10af17fb4c85b11409fea47895b/raw/a3a8da0fa5b094f1ca9d82e1642b384889ae16e8/nodelist_sleeping_giant.csv')
-edgelist = pd.read_csv(
-    'https://gist.githubusercontent.com/brooksandrew/e570c38bcc72a8d102422f2af836513b/raw/89c76b2563dbc0e88384719a35cba0dfc04cd522/edgelist_sleeping_giant.csv')
+# nodelist = pd.read_csv(
+#     'https://gist.githubusercontent.com/brooksandrew/f989e10af17fb4c85b11409fea47895b/raw/a3a8da0fa5b094f1ca9d82e1642b384889ae16e8/nodelist_sleeping_giant.csv')
+# edgelist = pd.read_csv(
+#     'https://gist.githubusercontent.com/brooksandrew/e570c38bcc72a8d102422f2af836513b/raw/89c76b2563dbc0e88384719a35cba0dfc04cd522/edgelist_sleeping_giant.csv')
+nodelist = pd.read_csv('node_list.csv')
+edgelist = pd.read_csv('edge_list.csv')
+
 edgelist.head(10)
 nodelist.head(5)
 
@@ -313,6 +316,6 @@ for i, e in enumerate(euler_circuit, start=1):
     nx.draw_networkx_edges(g_i, pos=node_positions, edge_color=g_i_edge_colors, alpha=0.8)
 
     plt.axis('off')
-    plt.savefig('images/img{}.png'.format(i), dpi=120, bbox_inches='tight')
+    plt.savefig('images2/img{}.png'.format(i), dpi=120, bbox_inches='tight')
     plt.close()
 

@@ -13,8 +13,8 @@ def make_circuit_video(image_path, movie_filename, fps=5):
     # make movie
     with imageio.get_writer(movie_filename, mode='I', fps=fps) as writer:
         for filename in filenames:
-            image = imageio.imread(filename)
-            writer.append_data(image)
+            images = imageio.imread(filename)
+            writer.append_data(images)
 
 
-make_circuit_video('images/', 'images/cpp_route_animation.gif', fps=3)
+make_circuit_video('images/', 'gif/graph_route_animation.gif', fps=5)
